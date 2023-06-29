@@ -21,35 +21,26 @@ NM-Media-Technical-Assessment
         ```bash
         docker compose run --rm composer update
         ```
-    - npm run Dev
-        ```bash
-        docker compose run --rm npm run dev
-        ```
     - Migrate
         ```bash
-        docker compose run --rm artisan migrate
-        ```
-    - Test
-        ```bash
-        docker compose run --rm artisan test
+        docker compose run --rm spark migrate
         ```
 
-- Documentation Generate
-    ```bash
-    docker compose run --rm artisan enum:docs  && docker compose run --rm artisan scribe:generate --force
-    ```
-- IDE Helper Generate
-    ```bash
-    docker compose run --rm artisan enum:annotate && docker compose run --rm artisan migrate:fresh && docker compose run --rm artisan ide-helper:generate && docker compose run --rm artisan ide-helper:models --write --reset --write-mixin && docker compose run --rm artisan ide-helper:meta
-    ```
+[//]: # (    - Test)
+
+[//]: # (        ```bash)
+
+[//]: # (        docker compose run --rm spark test)
+
+[//]: # (        ```)
+
 - PHP Pint Fixer
     ```bash
-    docker compose run --rm php ./vendor/bin/pint
-    docker compose run --rm php ./vendor/bin/pint --test
+    docker compose run --rm php ./vendor/bin/php-cs-fixer fix --verbose
     ```
 - SQL init
     ```mysql
-    CREATE DATABASE DONATION;
+    CREATE DATABASE NMCHAT;
     CREATE USER 'homestead'@'%' IDENTIFIED BY 'secret';
     GRANT ALL PRIVILEGES ON * . * TO 'homestead'@'%';
     FLUSH PRIVILEGES;

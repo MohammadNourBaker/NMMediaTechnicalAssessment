@@ -2,12 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Models;
+namespace App\Models;
 
+use App\Entities\User;
 use CodeIgniter\Shield\Models\UserModel as ShieldUserModel;
 
 class UserModel extends ShieldUserModel
 {
+    protected $returnType = User::class;
+
     protected function initialize(): void
     {
         parent::initialize();
@@ -16,8 +19,6 @@ class UserModel extends ShieldUserModel
             ...$this->allowedFields,
             'firstname',
             'lastname',
-            'email',
-            'has_verify_email',
         ];
     }
 }

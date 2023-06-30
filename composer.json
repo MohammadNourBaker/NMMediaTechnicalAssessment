@@ -4,12 +4,19 @@
     "description": "CodeIgniter4 starter app",
     "homepage": "https://codeigniter.com",
     "license": "MIT",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/MohammadNourBaker/otp.git"
+        }
+    ],
     "require": {
         "php": "^7.4 || ^8.0",
         "agungsugiarto/codeigniter4-repository": "^1.1",
+        "cboden/ratchet": "^0.4.4",
         "codeigniter4/framework": "^4.0",
         "codeigniter4/shield": "^1.0@beta",
-        "firebase/php-jwt": "^6.4"
+        "tzsk/otp": "dev-master"
     },
     "require-dev": {
         "codeigniter/coding-standard": "^1.7",

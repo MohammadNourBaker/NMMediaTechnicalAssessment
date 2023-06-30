@@ -7,7 +7,6 @@ namespace Config;
 use CodeIgniter\Shield\Authentication\Actions\ActionInterface;
 use CodeIgniter\Shield\Authentication\AuthenticatorInterface;
 use CodeIgniter\Shield\Authentication\Authenticators\AccessTokens;
-use CodeIgniter\Shield\Authentication\Authenticators\JWT;
 use CodeIgniter\Shield\Authentication\Authenticators\Session;
 use CodeIgniter\Shield\Authentication\Passwords\CompositionValidator;
 use CodeIgniter\Shield\Authentication\Passwords\DictionaryValidator;
@@ -15,7 +14,7 @@ use CodeIgniter\Shield\Authentication\Passwords\NothingPersonalValidator;
 use CodeIgniter\Shield\Authentication\Passwords\PwnedValidator;
 use CodeIgniter\Shield\Authentication\Passwords\ValidatorInterface;
 use CodeIgniter\Shield\Config\Auth as ShieldAuth;
-use CodeIgniter\Shield\Models\UserModel;
+use App\Models\UserModel;
 
 class Auth extends ShieldAuth
 {
@@ -29,17 +28,17 @@ class Auth extends ShieldAuth
      * ////////////////////////////////////////////////////////////////////
      */
     public array $views = [
-        'login'                       => '\CodeIgniter\Shield\Views\login',
-        'register'                    => '\CodeIgniter\Shield\Views\register',
-        'layout'                      => '\CodeIgniter\Shield\Views\layout',
-        'action_email_2fa'            => '\CodeIgniter\Shield\Views\email_2fa_show',
-        'action_email_2fa_verify'     => '\CodeIgniter\Shield\Views\email_2fa_verify',
-        'action_email_2fa_email'      => '\CodeIgniter\Shield\Views\Email\email_2fa_email',
-        'action_email_activate_show'  => '\CodeIgniter\Shield\Views\email_activate_show',
-        'action_email_activate_email' => '\CodeIgniter\Shield\Views\Email\email_activate_email',
-        'magic-link-login'            => '\CodeIgniter\Shield\Views\magic_link_form',
-        'magic-link-message'          => '\CodeIgniter\Shield\Views\magic_link_message',
-        'magic-link-email'            => '\CodeIgniter\Shield\Views\Email\magic_link_email',
+        'login'                       => 'Auth/login',
+        'register'                    => 'Auth/register',
+        'layout'                      => 'Auth/layout',
+        'action_email_2fa'            => 'email_2fa_show',
+        'action_email_2fa_verify'     => 'email_2fa_verify',
+        'action_email_2fa_email'      => 'Email\email_2fa_email',
+        'action_email_activate_show'  => 'email_activate_show',
+        'action_email_activate_email' => 'Email\email_activate_email',
+        'magic-link-login'            => 'magic_link_form',
+        'magic-link-message'          => 'magic_link_message',
+        'magic-link-email'            => 'Email\magic_link_email',
     ];
 
     /**
@@ -89,8 +88,9 @@ class Auth extends ShieldAuth
     public array $redirects = [
         'register'    => '/',
         'login'       => '/',
-        'logout'      => 'login',
+        'logout'      => 'auth/login',
         'force_reset' => '/',
+        'login-required' => 'auth/login'
     ];
 
     /**
@@ -127,7 +127,7 @@ class Auth extends ShieldAuth
     public array $authenticators = [
         'tokens'  => AccessTokens::class,
         'session' => Session::class,
-        'jwt'     => JWT::class,
+//        'jwt'     => JWT::class,
     ];
 
     /**
@@ -174,7 +174,7 @@ class Auth extends ShieldAuth
     public array $authenticationChain = [
         'session',
         'tokens',
-        'jwt',
+//        'jwt',
     ];
 
     /**
@@ -207,7 +207,7 @@ class Auth extends ShieldAuth
      * could be modified as the only method of login once an account
      * has been set up.
      */
-    public bool $allowMagicLinkLogins = true;
+    public bool $allowMagicLinkLogins = false;
 
     /**
      * --------------------------------------------------------------------
@@ -395,6 +395,17 @@ class Auth extends ShieldAuth
      * @var class-string<UserModel>
      */
     public string $userProvider = UserModel::class;
+
+    /**
+     * Returns the URL that a user should be redirected
+     * to if login required.
+     */
+    public function loginRequired(): string
+    {
+        $url = setting('Auth.redirects')['login-required'];
+
+        return $this->getUrl($url);
+    }
 
     /**
      * Returns the URL that a user should be redirected

@@ -3,6 +3,8 @@
 namespace Config;
 
 // Create a new instance of our RouteCollection class.
+use CodeIgniter\Router\RouteCollection;
+
 $routes = Services::routes();
 
 /*
@@ -29,10 +31,28 @@ $routes->set404Override();
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-$routes->get('/', 'Home::index');
-
-service('auth')->routes($routes);
-
+$routes->get('/', 'Client\Home\Home::index');
+$routes->group('auth', static function (RouteCollection $routes) {
+    $routes->group('', static function (RouteCollection $routes) {
+        // login
+        $routes->get('login', 'Auth\AuthController::loginView');
+        $routes->post('login', 'Auth\AuthController::loginAction');
+        // register
+        $routes->get('register', 'Auth\AuthController::registerView');
+        $routes->post('register', 'Auth\AuthController::registerAction');
+        $routes->post('request-forget-password', '');
+        $routes->post('forget-password', '');
+    });
+    $routes->group('', static function (RouteCollection $routes) {
+        $routes->post('send-otp', '');
+        $routes->post('verify-email', '');
+        $routes->put('update', '');
+        // logout
+        $routes->get('logout', 'Auth\AuthController::logoutAction');
+        $routes->post('change-password', '');
+        $routes->get('profile', '');
+    });
+});
 /*
  * --------------------------------------------------------------------
  * Additional Routing

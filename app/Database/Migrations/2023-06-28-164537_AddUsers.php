@@ -15,14 +15,6 @@ class AddUsers extends Migration
             'type'       => 'VARCHAR',
             'constraint' => '50',
         ],
-        'email' => [
-            'type'       => 'VARCHAR',
-            'constraint' => '50',
-        ],
-        'has_verify_email' => [
-            'type'    => 'BOOLEAN',
-            'default' => false,
-        ],
     ];
 
     public function up()

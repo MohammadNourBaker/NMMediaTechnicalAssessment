@@ -7,10 +7,11 @@ NM-Media-Technical-Assessment
 - copy `env` to `.env` and put it in the same folder
 ####  Now From Terminal run the following:
 1. `docker compose up -d --build`
-2. `docker compose run --rm spark migrate --all`
-3. `docker compose run --rm spark db:seed DatabaseSeeder`
-4. `docker compose exec php php ./public/index.php Websocket Websocket index`
-5. You can access this link: `http://localhost:8080/`
+2. `docker compose run --rm composer install`
+3. `docker compose run --rm spark migrate --all`
+4. `docker compose run --rm spark db:seed DatabaseSeeder`
+5. `docker compose exec php php ./public/index.php Websocket Websocket index`
+6. You can access this link: `http://localhost:8080/`
 
 # Now every thing is ready, there is three clients accounts:
 1. email: `client1@chat.realtime,` password: `Aa112233`

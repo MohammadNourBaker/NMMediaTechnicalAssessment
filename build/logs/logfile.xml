@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="/var/www/html/tests" tests="5" assertions="0" errors="5" warnings="0" failures="0" skipped="0" time="0.086305">
+    <testsuite name="ExampleDatabaseTest" file="/var/www/html/tests/database/ExampleDatabaseTest.php" tests="2" assertions="0" errors="2" warnings="0" failures="0" skipped="0" time="0.067970">
+      <testcase name="testModelFindAll" class="ExampleDatabaseTest" classname="ExampleDatabaseTest" file="/var/www/html/tests/database/ExampleDatabaseTest.php" line="17" assertions="0" time="0.058181">
+        <error type="Error">ExampleDatabaseTest::testModelFindAll
+Error: Cannot use object of type Email as array
+
+/var/www/html/vendor/codeigniter4/framework/system/Email/Email.php:421
+/var/www/html/vendor/codeigniter4/framework/system/Email/Email.php:399
+/var/www/html/vendor/codeigniter4/framework/system/Test/CIUnitTestCase.php:326
+/var/www/html/vendor/codeigniter4/framework/system/Test/CIUnitTestCase.php:243</error>
+      </testcase>
+      <testcase name="testSoftDeleteLeavesRow" class="ExampleDatabaseTest" classname="ExampleDatabaseTest" file="/var/www/html/tests/database/ExampleDatabaseTest.php" line="28" assertions="0" time="0.009789">
+        <error type="Error">ExampleDatabaseTest::testSoftDeleteLeavesRow
+Error: Cannot use object of type Email as array
+
+/var/www/html/vendor/codeigniter4/framework/system/Email/Email.php:421
+/var/www/html/vendor/codeigniter4/framework/system/Email/Email.php:399
+/var/www/html/vendor/codeigniter4/framework/system/Test/CIUnitTestCase.php:326
+/var/www/html/vendor/codeigniter4/framework/system/Test/CIUnitTestCase.php:243</error>
+      </testcase>
+    </testsuite>
+    <testsuite name="ExampleSessionTest" file="/var/www/html/tests/session/ExampleSessionTest.php" tests="1" assertions="0" errors="1" warnings="0" failures="0" skipped="0" time="0.006368">
+      <testcase name="testSessionSimple" class="ExampleSessionTest" classname="ExampleSessionTest" file="/var/www/html/tests/session/ExampleSessionTest.php" line="11" assertions="0" time="0.006368">
+        <error type="Error">ExampleSessionTest::testSessionSimple
+Error: Cannot use object of type Email as array
+
+/var/www/html/vendor/codeigniter4/framework/system/Email/Email.php:421
+/var/www/html/vendor/codeigniter4/framework/system/Email/Email.php:399
+/var/www/html/vendor/codeigniter4/framework/system/Test/CIUnitTestCase.php:326
+/var/www/html/vendor/codeigniter4/framework/system/Test/CIUnitTestCase.php:243</error>
+      </testcase>
+    </testsuite>
+    <testsuite name="HealthTest" file="/var/www/html/tests/unit/HealthTest.php" tests="2" assertions="0" errors="2" warnings="0" failures="0" skipped="0" time="0.011967">
+      <testcase name="testIsDefinedAppPath" class="HealthTest" classname="HealthTest" file="/var/www/html/tests/unit/HealthTest.php" line="13" assertions="0" time="0.006871">
+        <error type="Error">HealthTest::testIsDefinedAppPath
+Error: Cannot use object of type Email as array
+
+/var/www/html/vendor/codeigniter4/framework/system/Email/Email.php:421
+/var/www/html/vendor/codeigniter4/framework/system/Email/Email.php:399
+/var/www/html/vendor/codeigniter4/framework/system/Test/CIUnitTestCase.php:326
+/var/www/html/vendor/codeigniter4/framework/system/Test/CIUnitTestCase.php:243</error>
+      </testcase>
+      <testcase name="testBaseUrlHasBeenSet" class="HealthTest" classname="HealthTest" file="/var/www/html/tests/unit/HealthTest.php" line="18" assertions="0" time="0.005096">
+        <error type="Error">HealthTest::testBaseUrlHasBeenSet
+Error: Cannot use object of type Email as array
+
+/var/www/html/vendor/codeigniter4/framework/system/Email/Email.php:421
+/var/www/html/vendor/codeigniter4/framework/system/Email/Email.php:399
+/var/www/html/vendor/codeigniter4/framework/system/Test/CIUnitTestCase.php:326
+/var/www/html/vendor/codeigniter4/framework/system/Test/CIUnitTestCase.php:243</error>
+      </testcase>
+    </testsuite>
+  </testsuite>
+</testsuites>

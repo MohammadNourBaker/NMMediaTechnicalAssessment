@@ -1,0 +1,51 @@
+{
+    "name": "codeigniter4/appstarter",
+    "type": "project",
+    "description": "CodeIgniter4 starter app",
+    "homepage": "https://codeigniter.com",
+    "license": "MIT",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/MohammadNourBaker/ci-socket.io.git"
+        }
+    ],
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "agungsugiarto/codeigniter4-repository": "^1.1",
+        "cboden/ratchet": "^0.4.4",
+        "codeigniter4/framework": "^4.0",
+        "firebase/php-jwt": "^6.8"
+    },
+    "require-dev": {
+        "codeigniter/coding-standard": "^1.7",
+        "fakerphp/faker": "^1.9",
+        "mikey179/vfsstream": "^1.6",
+        "phpunit/phpunit": "^9.1"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "autoload": {
+        "exclude-from-classmap": [
+            "**/Database/Migrations/**"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Support\\": "tests/_support"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    },
+    "support": {
+        "forum": "https://forum.codeigniter.com/",
+        "source": "https://github.com/codeigniter4/CodeIgniter4",
+        "slack": "https://codeigniterchat.slack.com"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

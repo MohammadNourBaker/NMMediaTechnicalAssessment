@@ -1,0 +1,89 @@
+version: '3'
+
+services:
+    #Nginx Service
+    nginx:
+        image: nginx:alpine
+        container_name: nm_chat_nginx
+        ports:
+            - "8080:80"
+        volumes:
+            - ./:/var/www/html
+            - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+        depends_on:
+            - php
+            - mysql
+        networks:
+            - nm_chat
+
+    #MySQL Service
+    mysql:
+        image: mariadb:10.6
+        container_name: nm_chat_mysql
+        restart: always
+        tty: true
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: NMCHAT
+            MYSQL_USER: homestead
+            MYSQL_PASSWORD: secret
+            MYSQL_ROOT_PASSWORD: root
+            SERVICE_TAGS: dev
+            SERVICE_NAME: mysql
+        volumes:
+            - maria-db-data:/var/lib/mysql/
+            - ./docker/mysql/my.cnf:/etc/mysql/conf.d/mysql.cnf
+        networks:
+            - nm_chat
+
+    #PHP Service
+    php:
+        build:
+            context: .
+            dockerfile: docker/Dockerfile
+        container_name: nm_chat_php
+        volumes:
+            - ./:/var/www/html
+        ports:
+            - "9000:9000"
+            - "9001:9001"
+        networks:
+            - nm_chat
+
+    #COMPOSER Service
+    composer:
+        container_name: nm_chat_composer
+        build:
+            context: .
+            dockerfile: docker/Dockerfile
+        volumes:
+            - ./:/var/www/html
+        working_dir: /var/www/html
+        entrypoint: [ 'composer' ]
+        networks:
+            - nm_chat
+
+    #SPARK Service
+    spark:
+        build:
+            context: .
+            dockerfile: docker/Dockerfile
+        container_name: nm_chat_spark
+        volumes:
+            - ./:/var/www/html
+        depends_on:
+            - mysql
+        working_dir: /var/www/html
+        entrypoint: [ 'php', '/var/www/html/spark' ]
+        networks:
+            - nm_chat
+
+#Docker Networks
+networks:
+    nm_chat:
+
+#Volumes
+volumes:
+    maria-db-data:
+        driver: local

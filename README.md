@@ -11,7 +11,9 @@ NM-Media-Technical-Assessment
 3. `docker compose run --rm spark migrate --all`
 4. `docker compose run --rm spark db:seed DatabaseSeeder`
 5. `docker compose exec php php ./public/index.php Websocket Websocket index`
-6. You can access this link: `http://localhost:8080/`
+6. Important Note:
+- For linux/ubuntu users you must run this too `chmod -R 777 ./writable/`
+7. You can access this link: `http://localhost:8080/`
 
 # Now every thing is ready, there is three clients accounts:
 1. email: `client1@chat.realtime,` password: `Aa112233`

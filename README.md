@@ -4,7 +4,9 @@ NM Media Real Time Chat Application using Codeigniter4 and Socket.io
 
 # How To Run:
 - Install Docker and Docker compose
+- Clone the project
 - copy `env` to `.env` and put it in the same folder
+- Open the project folder from terminal
 ####  Now From Terminal run the following:
 1. `docker compose up -d --build`
 2. `docker compose run --rm composer install`

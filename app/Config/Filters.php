@@ -2,6 +2,12 @@
 
 namespace Config;
 
+use App\Filters\AdminRequired;
+use App\Filters\AuthRequired;
+use App\Filters\ClientRequired;
+use App\Filters\VerifyEmailNotRequired;
+use App\Filters\VerifyEmailRequired;
+use App\Filters\AuthNotRequired;
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Filters\CSRF;
 use CodeIgniter\Filters\DebugToolbar;
@@ -21,6 +27,12 @@ class Filters extends BaseConfig
         'honeypot'      => Honeypot::class,
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
+        'admin_required' => AdminRequired::class,
+        'auth_required' => AuthRequired::class,
+        'client_required' => ClientRequired::class,
+        'verify_email_required' => VerifyEmailRequired::class,
+        'verify_email_not_required' => VerifyEmailNotRequired::class,
+        'auth_not_required' => AuthNotRequired::class,
     ];
 
     /**

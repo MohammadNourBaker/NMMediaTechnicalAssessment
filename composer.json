@@ -7,7 +7,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/MohammadNourBaker/otp.git"
+            "url": "https://github.com/MohammadNourBaker/ci-socket.io.git"
         }
     ],
     "require": {
@@ -15,8 +15,7 @@
         "agungsugiarto/codeigniter4-repository": "^1.1",
         "cboden/ratchet": "^0.4.4",
         "codeigniter4/framework": "^4.0",
-        "codeigniter4/shield": "^1.0@beta",
-        "tzsk/otp": "dev-master"
+        "firebase/php-jwt": "^6.8"
     },
     "require-dev": {
         "codeigniter/coding-standard": "^1.7",

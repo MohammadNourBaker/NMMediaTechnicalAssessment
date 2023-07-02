@@ -17,6 +17,7 @@ $routes->setDefaultController('Home');
 $routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);
 $routes->set404Override();
+$routes->setAutoRoute(true);
 // The Auto Routing (Legacy) is very dangerous. It is easy to create vulnerable apps
 // where controller filters or CSRF protection are bypassed.
 // If you don't want to define all routes, please use the Auto Routing (Improved).
@@ -31,27 +32,45 @@ $routes->set404Override();
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-$routes->get('/', 'Client\Home\Home::index');
+
 $routes->group('auth', static function (RouteCollection $routes) {
-    $routes->group('', static function (RouteCollection $routes) {
+    $routes->group('', ['filter' => 'auth_not_required'], static function (RouteCollection $routes) {
         // login
         $routes->get('login', 'Auth\AuthController::loginView');
         $routes->post('login', 'Auth\AuthController::loginAction');
         // register
         $routes->get('register', 'Auth\AuthController::registerView');
         $routes->post('register', 'Auth\AuthController::registerAction');
-        $routes->post('request-forget-password', '');
-        $routes->post('forget-password', '');
     });
-    $routes->group('', static function (RouteCollection $routes) {
-        $routes->post('send-otp', '');
-        $routes->post('verify-email', '');
-        $routes->put('update', '');
-        // logout
+    $routes->group('', ['filter' => 'auth_required'], static function (RouteCollection $routes) {
+        $routes->get(
+            'verify-email',
+            'Auth\AuthController::verifyView',
+            ['filter' => 'verify_email_not_required']);
+        $routes->post('verify-email', 'Auth\AuthController::verifyEmail',
+            ['filter' => 'verify_email_not_required']);
+        $routes->get(
+            'send-otp',
+            'Auth\AuthController::sendOtp',
+            ['filter' => 'verify_email_not_required']);
         $routes->get('logout', 'Auth\AuthController::logoutAction');
-        $routes->post('change-password', '');
-        $routes->get('profile', '');
     });
+});
+
+$routes->group('client', ['filter' => [
+    'auth_required',
+    'client_required',
+    'verify_email_required'
+]], static function (RouteCollection $routes) {
+    $routes->get('chat', 'Client\Chat\ChatController::index');
+});
+
+$routes->group('admin', ['filter' => [
+    'auth_required',
+    'admin_required',
+    'verify_email_required'
+]], static function (RouteCollection $routes) {
+    $routes->get('chat', 'Home::index');
 });
 /*
  * --------------------------------------------------------------------

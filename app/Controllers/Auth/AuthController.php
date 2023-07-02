@@ -1,31 +1,21 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Controllers\Auth;
 
+
 use App\Controllers\BaseController;
-use CodeIgniter\Events\Events;
+use App\Repositories\Auth\AuthRepository;
 use CodeIgniter\HTTP\RedirectResponse;
-use CodeIgniter\HTTP\RequestInterface;
-use CodeIgniter\HTTP\ResponseInterface;
-use CodeIgniter\Shield\Authentication\Authenticators\Session;
-use CodeIgniter\Shield\Entities\User;
-use CodeIgniter\Shield\Exceptions\ValidationException;
 use Config\Services;
-use Psr\Log\LoggerInterface;
+use ReflectionException;
 
 class AuthController extends BaseController
 {
-    protected $helpers = ['setting'];
-
-    /**
-     * Constructor.
-     */
-    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
+    protected $helpers = ['form'];
+    protected AuthRepository $authRepository;
+    public function __construct()
     {
-        parent::initController($request, $response, $logger);
-
+        $this->authRepository = new AuthRepository();
     }
 
     /**
@@ -35,11 +25,7 @@ class AuthController extends BaseController
      */
     public function loginView(): string|RedirectResponse
     {
-        if (auth()->loggedIn()) {
-            return redirect()->to(config('Auth')->loginRedirect());
-        }
-
-        return view(setting('Auth.views')['login']);
+        return view('auth/login');
     }
 
     /**
@@ -47,29 +33,17 @@ class AuthController extends BaseController
      */
     public function loginAction(): RedirectResponse
     {
-        // Validate here first, since some things,
-        // like the password, can only be validated properly here.
-
         $validation = Services::validation();
         if (!$validation->run($this->request->getPost(), 'login')) {
-            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
+            return redirect()->back()->withInput()->with('validation', $validation->getErrors());
         }
-
-        $credentials = $this->request->getPost(setting('Auth.validFields'));
-        $credentials = array_filter($credentials);
-        $credentials['password'] = $this->request->getPost('password');
-        $remember = (bool)$this->request->getPost('remember');
-
-        /** @var Session $authenticator */
-        $authenticator = auth('session')->getAuthenticator();
-
-        // Attempt to login
-        $result = $authenticator->remember($remember)->attempt($credentials);
-        if (!$result->isOK()) {
-            return redirect()->back()->withInput()->with('error', $result->reason());
+        $user = $this->authRepository->login(
+            $this->request->getPost(array_keys($validation->getRules()))
+        );
+        if ($user['is_admin']) {
+            return redirect()->to('admin/dashboard')->withCookies();
         }
-
-        return redirect()->to(config('Auth')->loginRedirect())->withCookies();
+        return redirect()->to('client/chat')->withCookies();
     }
 
     /**
@@ -77,13 +51,10 @@ class AuthController extends BaseController
      */
     public function logoutAction(): RedirectResponse
     {
-        // Capture logout redirect URL before auth logout,
-        // otherwise you cannot check the user in `logoutRedirect()`.
-        $url = config('Auth')->logoutRedirect();
+        session()->destroy();
 
-        auth()->logout();
-
-        return redirect()->to($url)->with('message', lang('Auth.successLogout'));
+        return redirect()->to('auth/login')
+            ->with('message', 'Logged out successfully.');
     }
 
     /**
@@ -93,11 +64,7 @@ class AuthController extends BaseController
      */
     public function registerView()
     {
-        if (auth()->loggedIn()) {
-            return redirect()->to(config('Auth')->registerRedirect());
-        }
-
-        return view(setting('Auth.views')['register']);
+        return view('auth/register');
     }
 
     /**
@@ -105,52 +72,71 @@ class AuthController extends BaseController
      */
     public function registerAction(): RedirectResponse
     {
-
-        if (auth()->loggedIn()) {
-            return redirect()->to(config('Auth')->registerRedirect());
-        }
-
-        /** @var \Models\UserModel $users */
-        $users = model(setting('Auth.userProvider'));
-
         $validation = Services::validation();
         // Validate here first, since some things,
         // like the password, can only be validated properly here.
         if (!$validation->run($this->request->getPost(), 'registration')) {
-            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
+            return redirect()->back()->withInput()->with('validation', $validation->getErrors());
         }
+        $user = $this->authRepository->register(
+            $this->request->getPost(array_keys($validation->getRules()))
+        );
+        return redirect()->to('auth/verify-email')->withCookies()
+            ->with('message', 'registration successfully');
+    }
 
-        // Save the user
-        $allowedPostFields = array_keys($validation->getRules());
-        $user = new User();
-        $user->fill($this->request->getPost($allowedPostFields));
 
-        try {
-            $users->save($user);
-        } catch (ValidationException $e) {
-            return redirect()->back()->withInput()->with('errors', $users->errors());
+    /**
+     * Return the editable properties of a resource object
+     *
+     * @return mixed
+     */
+    public function edit($id = null)
+    {
+        //
+    }
+
+    /**
+     * Add or update a model resource, from "posted" properties
+     *
+     * @param null $id
+     * @return mixed
+     * @throws ReflectionException
+     */
+    public function update($id = null): mixed
+    {
+        $this->authRepository->update($this->request->getPost(), $id);
+        return redirect()->back();
+    }
+
+    public function verifyView(): string
+    {
+        $this->authRepository->sendOTP();
+        return view('auth/verify');
+    }
+
+    public function verifyEmail()
+    {
+        $validation = Services::validation();
+        if (!$validation->run($this->request->getPost(), 'verifyemail')) {
+            return redirect()->back()->withInput()->with('validation', $validation->getErrors());
         }
+        if ($this->authRepository->verifyEmail(
+            $this->request->getPost(array_keys($validation->getRules()))['otp_code']
+        )) {
+            if (session()->get('is_admin')) {
+                return redirect()->to('admin/dashboard')->withCookies();
+            }
+            return redirect()->to('client/chat')->withCookies();
+        }
+        else {
+            return redirect()->back()->withInput()->with('validation', 'the otp is not correct');
+        }
+    }
 
-        // To get the complete user object with ID, we need to get from the database
-        $user = $users->findById($users->getInsertID());
-
-        // Add to default group
-        $users->addToDefaultGroup($user);
-
-        Events::trigger('register', $user);
-
-        /** @var Session $authenticator */
-        $authenticator = auth('session')->getAuthenticator();
-
-        $authenticator->startLogin($user);
-
-        // Set the user active
-        $user->activate();
-
-        $authenticator->completeLogin($user);
-
-        // Success!
-        return redirect()->to(config('Auth')->registerRedirect())
-            ->with('message', lang('Auth.registerSuccess'));
+    public function sendOtp(): RedirectResponse
+    {
+        $this->authRepository->sendOTP();
+        return redirect()->back()->with('sent', 'Otp has been sent');
     }
 }

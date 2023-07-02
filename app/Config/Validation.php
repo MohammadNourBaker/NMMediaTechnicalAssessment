@@ -2,8 +2,8 @@
 
 namespace Config;
 
+use App\Validation\UserRules;
 use CodeIgniter\Config\BaseConfig;
-use CodeIgniter\Shield\Authentication\Passwords;
 use CodeIgniter\Validation\StrictRules\CreditCardRules;
 use CodeIgniter\Validation\StrictRules\FileRules;
 use CodeIgniter\Validation\StrictRules\FormatRules;
@@ -26,6 +26,7 @@ class Validation extends BaseConfig
         FormatRules::class,
         FileRules::class,
         CreditCardRules::class,
+        UserRules::class,
     ];
 
     /**
@@ -35,7 +36,7 @@ class Validation extends BaseConfig
      * @var array<string, string>
      */
     public array $templates = [
-        'list' => 'CodeIgniter\Validation\Views\list',
+        'list'   => 'CodeIgniter\Validation\Views\list',
         'single' => 'CodeIgniter\Validation\Views\single',
     ];
 
@@ -55,12 +56,14 @@ class Validation extends BaseConfig
         ],
         'password' => [
             'label' => 'Auth.password',
-            'rules' => 'required|max_length[255]',
+            'rules' => 'required|max_length[255]|validateUser[email,password]',
             'errors' => [
                 'max_byte' => 'Auth.errorPasswordTooLongBytes',
+                'validateUser' => 'Email or Password don\'t match',
             ],
         ],
     ];
+
 
     // registration
     public array $registration = [
@@ -91,7 +94,7 @@ class Validation extends BaseConfig
         ],
         'password' => [
             'label' => 'Auth.password',
-            'rules' => 'required|max_length[255]|strong_password',
+            'rules' => 'required|max_length[255]',
             'errors' => [
                 'max_byte' => 'Auth.errorPasswordTooLongBytes',
             ],
@@ -99,6 +102,16 @@ class Validation extends BaseConfig
         'password_confirm' => [
             'label' => 'Auth.passwordConfirm',
             'rules' => 'required|matches[password]',
+        ],
+    ];
+
+    // verify_email
+    public array $verifyemail = [
+        'otp_code' => [
+            'label' => 'Auth.otp_code',
+            'rules' => [
+                'required',
+            ],
         ],
     ];
 }

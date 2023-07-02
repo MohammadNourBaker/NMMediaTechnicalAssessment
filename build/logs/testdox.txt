@@ -1,0 +1,11 @@
+Example Database
+ [ ] Model find all
+ [ ] Soft delete leaves row
+
+Example Session
+ [ ] Session simple
+
+Health
+ [ ] Is defined app path
+ [ ] Base url has been set
+

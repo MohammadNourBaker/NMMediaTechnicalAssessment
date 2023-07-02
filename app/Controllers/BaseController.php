@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\CLIRequest;
 use CodeIgniter\HTTP\IncomingRequest;
@@ -22,8 +21,6 @@ use Psr\Log\LoggerInterface;
  */
 abstract class BaseController extends Controller
 {
-    use ResponseTrait;
-
     /**
      * Instance of the main Request object.
      *
@@ -51,8 +48,6 @@ abstract class BaseController extends Controller
      */
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
-        $this->helpers = array_merge($this->helpers, ['setting']);
-
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
 

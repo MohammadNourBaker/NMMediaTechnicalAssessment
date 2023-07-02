@@ -2,6 +2,22 @@
 
 NM-Media-Technical-Assessment
 
+# How To Run:
+- Install Docker and Docker compose
+- copy `env` to `.env` and put it in the same folder
+####  Now From Terminal run the following:
+1. `docker compose up -d --build`
+2. `docker compose run --rm spark migrate --all`
+3. `docker compose run --rm spark db:seed DatabaseSeeder`
+4. `docker compose exec php php ./public/index.php Websocket Websocket index`
+5. You can access this link: `http://localhost:8080/`
+
+# Now every thing is ready, there is three clients accounts:
+1. email: `client1@chat.realtime,` password: `Aa112233`
+2. email: `client2@chat.realtime,` password: `Aa112233`
+3. email: `client3@chat.realtime,` password: `Aa112233`
+- Note: you can register your own email but you have to verify it.
+
 # Documentation:
 
 - Docker Compose
@@ -23,21 +39,13 @@ NM-Media-Technical-Assessment
         ```
     - Migrate
         ```bash
-        docker compose run --rm spark migrate
+        docker compose run --rm spark migrate --all
+        ```
+    - Run Websocket service
+        ```bash
+        docker compose exec php php ./public/index.php Websocket Websocket index
         ```
 
-[//]: # (    - Test)
-
-[//]: # (        ```bash)
-
-[//]: # (        docker compose run --rm spark test)
-
-[//]: # (        ```)
-
-- PHP Pint Fixer
-    ```bash
-    docker compose run --rm php ./vendor/bin/php-cs-fixer fix --verbose
-    ```
 - SQL init
     ```mysql
     CREATE DATABASE NMCHAT;

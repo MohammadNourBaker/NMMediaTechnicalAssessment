@@ -1,24 +1,51 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Models;
 
-use App\Entities\User;
-use CodeIgniter\Shield\Models\UserModel as ShieldUserModel;
+use CodeIgniter\Model;
 
-class UserModel extends ShieldUserModel
+class UserModel extends Model
 {
-    protected $returnType = User::class;
+    protected $table = 'users';
+    protected $allowedFields = [
+        'firstname',
+        'lastname',
+        'email',
+        'has_verify_email',
+        'is_admin',
+        'password',
+        'updated_at'
+    ];
 
-    protected function initialize(): void
+    public $orderable = [
+        'firstname',
+        'lastname',
+    ];
+
+    protected $beforeInsert = ['beforeInsert'];
+    protected $beforeUpdate = ['beforeUpdate'];
+
+
+    protected function beforeInsert(array $data): array
     {
-        parent::initialize();
+        $data = $this->passwordHash($data);
+        $data['data']['created_at'] = date('Y-m-d H:i:s');
 
-        $this->allowedFields = [
-            ...$this->allowedFields,
-            'firstname',
-            'lastname',
-        ];
+        return $data;
+    }
+
+    protected function beforeUpdate(array $data): array
+    {
+        $data = $this->passwordHash($data);
+        $data['data']['updated_at'] = date('Y-m-d H:i:s');
+        return $data;
+    }
+
+    protected function passwordHash(array $data): array
+    {
+        if (isset($data['data']['password']))
+            $data['data']['password'] = password_hash($data['data']['password'], PASSWORD_DEFAULT);
+
+        return $data;
     }
 }

@@ -1,6 +1,6 @@
-# NM-Media-Technical-Assessment
+# NM Media Real Time Chat Application using Codeigniter4 and Socket.io
 
-NM-Media-Technical-Assessment
+NM Media Real Time Chat Application using Codeigniter4 and Socket.io
 
 # How To Run:
 - Install Docker and Docker compose
